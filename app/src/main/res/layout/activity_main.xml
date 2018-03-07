@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -32,14 +31,31 @@
 
         android:background="@color/Black">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="10"
-            android:gravity="center"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="9pt"
-            android:text="Lets play a simple Timestable Game." />
+            android:orientation="horizontal"
+            android:layout_weight="0">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".1"
+                android:id="@+id/aalogoImage"
+                android:background="@color/Black"
+                android:src="@mipmap/logo_atlast2"
+                android:scaleType="centerInside"
+                android:adjustViewBounds="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight=".9"
+                android:gravity="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="8pt"
+                android:text="A simple Timestable game." />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -141,6 +157,7 @@
                             android:layout_weight=".9"
                             android:gravity="center"
                             android:hint="name"
+                            android:maxLength="13"
                             android:textColor="@color/PaleVioletRed"
                             android:textSize="8pt"
                             android:textColorHint="@color/DimGray"
@@ -160,6 +177,7 @@
                             android:layout_weight=".9"
                             android:gravity="center"
                             android:hint="5"
+                            android:maxLength="5"
                             android:textColorHint="@color/DimGray"
                             android:inputType="number"
                             android:textColor="@color/PaleVioletRed"
@@ -178,6 +196,7 @@
                             android:layout_weight=".9"
                             android:gravity="center"
                             android:hint="16"
+                            android:maxLength="5"
                             android:textColorHint="@color/DimGray"
                             android:inputType="number"
                             android:textColor="@color/PaleVioletRed"
@@ -193,13 +212,22 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight=".9"
-                            android:orientation="vertical">
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/historytButton"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:onClick="showHistory"
+                                android:layout_weight="1"
+                                android:text="history" />
 
                             <Button
                                 android:id="@+id/startButton"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:onClick="startPlaying"
+                                android:layout_weight="1"
                                 android:text="Start" />
                         </LinearLayout>
 
