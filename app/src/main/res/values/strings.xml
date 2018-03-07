@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">TimesTable</string>
+    <string name="title_activity_play_table">PlayTableActivity</string>
+</resources>
