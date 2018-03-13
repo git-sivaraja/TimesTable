@@ -1,6 +1,5 @@
 package com.aathis.timestable;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,20 +13,20 @@ import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
+
+import pl.droidsonroids.gif.GifDrawable;
 
 public class PlayTableActivity extends AppCompatActivity {
 
@@ -38,6 +37,7 @@ public class PlayTableActivity extends AppCompatActivity {
     TextView titleTextTxt, timesNumberTxt, tableNoTxt, textTimer, mainTxtMsgV, resultGreetingTxt = null;
     ImageView greetingImageV = null;
     ProgressBar progressBar = null;
+    LinearLayout greetingArea = null;
     int progressCount = 0;
     int time = 30;
     CountDownTimer countDownTimer = null;
@@ -45,6 +45,8 @@ public class PlayTableActivity extends AppCompatActivity {
     String playerName = "Player";
     ArrayList<Map<Integer, String>> historyList = null;
     DBHelper dbHelper = null;
+    ArrayList<Integer> randumNumbers = null;
+    GifDrawable gifDrawable = null;
 
 
     @Override
@@ -71,16 +73,28 @@ public class PlayTableActivity extends AppCompatActivity {
         tableNoTxt = findViewById(R.id.tableNo);
         answerVal = findViewById(R.id.answerTxt);
         progressBar = findViewById(R.id.determinateBar);
+        progressBar.setMax(uptoNumber);
         greetingImageV = findViewById(R.id.greetingImage);
-        textTimer = (TextView) findViewById(R.id.timer);
+        textTimer = findViewById(R.id.timer);
+        greetingArea = findViewById(R.id.greetingArea);
         answerVal.addTextChangedListener(new EditTextListener());
         answerVal.requestFocus();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        mainTxtMsgV = (TextView) findViewById(R.id.mainTxtMsg);
+        mainTxtMsgV = findViewById(R.id.mainTxtMsg);
         resultGreetingTxt = findViewById(R.id.resultGreeting);
         answerVal = findViewById(R.id.answerTxt);
         titleTextTxt = findViewById(R.id.titleText);
+        randumNumbers = new ArrayList<Integer>();
+
         makeUpTitle();
+        greetingImageV.setImageResource(R.mipmap.images_welcome);
+        resultGreetingTxt.setText("Welcome " + playerName + "! \nAll the best!");
+
+        try {
+            gifDrawable = new GifDrawable(getResources(), R.drawable.images_wrong_1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         historyList = new ArrayList<>();
     }
@@ -100,7 +114,12 @@ public class PlayTableActivity extends AppCompatActivity {
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            String ansstr = answerVal.getText().toString();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            final String ansstr = answerVal.getText().toString();
+
             int ans = 0;
             if (ansstr != null && ansstr.length() > 0) {
                 try {
@@ -117,6 +136,8 @@ public class PlayTableActivity extends AppCompatActivity {
                 processCorrectAnswer(ans);
             } else if (ansstr != null && ansstr.length() > 0 && isWrongDigit(ansstr, Integer.toString(correctAnswer))) {
                 processWrongAnswer();
+            } else if (resultGreetingTxt.getText().toString().contains("Welcome")) {
+                //do nothing..
             } else {
                 resultGreetingTxt.setText("");
                 greetingImageV.setImageResource(android.R.color.transparent);
@@ -126,29 +147,27 @@ public class PlayTableActivity extends AppCompatActivity {
         private void processWrongAnswer() {
             resultGreetingTxt.setText("Oops! wrong.Try again...");
             resultGreetingTxt.setTextColor(Color.RED);
-            greetingImageV.setImageResource(R.mipmap.wrong_smiley_1);
+            //greetingImageV.setImageResource(R.mipmap.wrong_smiley_1);
+            greetingImageV.setImageDrawable(gifDrawable);
+
             greetingImageV.setAdjustViewBounds(true);
         }
 
         private void processCorrectAnswer(int ans) {
             String displayString = "(" + randumNumber + " x " + tableNumber + " = " + ans + " )";
-
-            if (progressCount < 100) {
-                progressCount +=5;
-            }else{
+            progressBar.setProgress(progressCount += 1);
+            if (progressBar.getProgress() == progressBar.getMax()) {
                 sendBackResult();
                 return;
             }
             nextNumber();
-            progressBar.setProgress(progressCount);
+
             resultGreetingTxt.setText(displayString + " Awesome! Try Next...");
             resultGreetingTxt.setTextColor(Color.GREEN);
-            greetingImageV.setImageResource(R.mipmap.thumb_up_emoticon1);
+            greetingImageV.setImageResource(R.mipmap.thumpsup_2);
             greetingImageV.setAdjustViewBounds(true);
         }
-        @Override
-        public void afterTextChanged(Editable s) {
-        }
+
     }
 
     private boolean isWrongDigit(String inputAnswerString, String correctAnswer) {
@@ -164,7 +183,12 @@ public class PlayTableActivity extends AppCompatActivity {
         randumNumber = rand.nextInt((uptoNumber + 1));
         if (randumNumber == 0) {
             nextNumber();
+        } else if (!randumNumbers.contains(randumNumber)) {
+            randumNumbers.add(randumNumber);
+        } else if (progressBar.getProgress() < progressBar.getMax()) {
+            nextNumber();
         }
+
         timesNumberTxt.setText(Integer.toString(randumNumber));
         tableNoTxt.setText(Integer.toString(tableNumber));
         answerVal.setText("");
@@ -177,19 +201,15 @@ public class PlayTableActivity extends AppCompatActivity {
     }
 
     private void sendBackResult() {
-        if (progressBar.getProgress() == 100) {
-            String timeTook = finishTable();
-            ArrayList<Player> players = dbHelper.getPlayerByName(playerName);
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(MainActivity.PREV_REPORT, playerName);
-            //intent.putExtra(MainActivity.PREV_REPORT, "Well Done! "+playerName+ "\nYou took " + timeTook +
-            //        " for table " + tableNumber + ".\nChoose next table.");
-            intent.putParcelableArrayListExtra(MainActivity.PLAYER_GAME_HISTORY_LIST, players);
-            countDownTimer.cancel();
-            this.finish();
-            this.finishActivity(0);
-            startActivity(intent);
-        }
+        String timeTook = finishTable();
+        ArrayList<Player> players = dbHelper.getPlayerByName(playerName);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(MainActivity.PREV_REPORT, playerName);
+        intent.putParcelableArrayListExtra(MainActivity.PLAYER_GAME_HISTORY_LIST, players);
+        countDownTimer.cancel();
+        this.finish();
+        this.finishActivity(0);
+        startActivity(intent);
     }
 
     private void createTimer() {
@@ -204,27 +224,41 @@ public class PlayTableActivity extends AppCompatActivity {
             }
             public void onFinish() {
                 textTimer.setText("time out!");
+                //progressBar.setProgress(progressCount +=1);
+                randumNumbers.remove(new Integer(randumNumber));
                 nextNumber();
             }
         };
     }
 
     public void finishPlaying(View view) {
-        countDownTimer.cancel();
-        this.finish();
-        startActivity(new Intent(this, MainActivity.class));
+        sendBackResult();
     }
 
-    public void goToNextLevel(View view) {
+    public void goUpToNextLevel(View view) {
 
         finishTable();
         this.tableNumber += 1;
         this.progressCount = 0;
+        randumNumbers.clear();
         progressBar.setProgress(this.progressCount);
         makeUpTitle();
         nextNumber();
         startTime = System.currentTimeMillis();
+    }
 
+    public void goDownToNextLevel(View view) {
+
+        if (tableNumber > 1) {
+            finishTable();
+            this.tableNumber -= 1;
+            this.progressCount = 0;
+            randumNumbers.clear();
+            progressBar.setProgress(this.progressCount);
+            makeUpTitle();
+            nextNumber();
+            startTime = System.currentTimeMillis();
+        }
     }
 
     private String finishTable() {
@@ -250,12 +284,16 @@ public class PlayTableActivity extends AppCompatActivity {
         player.setDatesPlayed(new Date());
         player.setTimeTakenInMillis(totalTimeTakenInSeconds);
         player.setTable(tableNumber);
-        player.setCompletionScale(progressBar.getProgress());
-        dbHelper.addPlayer(player);
+        player.setCompletionScale((progressBar.getProgress() * 100) / progressBar.getMax());
+        if (progressBar.getProgress() > 0) {
+            dbHelper.addPlayer(player);
+        }
         return timeTaken;
     }
 
     public void skipOnce(View view) {
+        //progressBar.setProgress(progressCount +=1);
+        randumNumbers.remove(new Integer(randumNumber));
         nextNumber();
     }
 

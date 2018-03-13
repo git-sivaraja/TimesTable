@@ -100,6 +100,8 @@ public class DBHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         Log.d("DB Fetch:", "Getting all player info for player"+ name);
+        cursor.close();
+        db.close();
         return playerList;
     }
     public List<Player> getAllPlayers() {
@@ -124,7 +126,25 @@ public class DBHelper extends SQLiteOpenHelper {
                 playerList.add(player);
             } while (cursor.moveToNext());
         }
-         return playerList;
+        cursor.close();
+        db.close();
+        return playerList;
+    }
+
+    public int getPlayCount(String playerName) {
+        int count = 0;
+
+        String selectQuery = "SELECT  count(*) FROM " + TABLE_NAME + " where name = '" + playerName + "' ";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            count = cursor.getCount();
+        }
+        cursor.close();
+        db.close();
+        return count;
     }
 
     public void deletePlayer(Player player) {

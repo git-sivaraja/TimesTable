@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -104,8 +103,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_weight="20"
-                android:background="@color/Black"
-                android:orientation="horizontal">
+                android:src="@mipmap/images12"
+                android:orientation="horizontal"
+                android:id="@+id/greetingArea">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -113,6 +113,7 @@
                 android:layout_weight="50"
                 android:id="@+id/greetingImage"
                 android:gravity="center"
+
                 android:background="@color/Black"/>
                 <TextView
                     android:layout_width="match_parent"
@@ -132,13 +133,29 @@
                 android:orientation="vertical"
                 android:background="@color/Black">
 
+                <!--ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="23dp"
+                    android:layout_marginTop="20dp"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:minHeight="50dp"
+                    android:minWidth="200dp"
+                    android:progress="1" /-->
+
                 <ProgressBar
                     android:id="@+id/determinateBar"
-                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:progress="0"
                     android:gravity="center"
+
                     android:background="@color/Black"
                     android:layout_weight="10"/>
                 <LinearLayout
@@ -147,39 +164,61 @@
                     android:layout_weight="20"
                     android:background="@color/Black"
                     android:orientation="horizontal">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:id="@+id/timer"
-                    android:text=""
-                    android:textSize="11pt"
-                    android:gravity="center"
-                    android:background="@color/Black"/>
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="skip"
-                    android:textSize="7pt"
-                    android:gravity="center"
-                    android:onClick="skipOnce"/>
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="Next Level"
-                    android:textSize="5pt"
-                    android:gravity="center"
-                    android:onClick="goToNextLevel"/>
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="Back"
-                    android:textSize="7pt"
-                    android:gravity="center"
-                    android:onClick="finishPlaying"/>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:backgroundTint="@color/Coral"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="finish"
+                        android:textSize="7pt"
+                        android:gravity="center"
+                        android:onClick="finishPlaying" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:backgroundTint="@color/ForestGreen"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text=" up"
+                        android:textSize="7pt"
+                        android:gravity="center"
+                        android:onClick="goUpToNextLevel" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:backgroundTint="@color/PaleVioletRed"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="down"
+                        android:textSize="7pt"
+                        android:gravity="center"
+                        android:onClick="goDownToNextLevel" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:backgroundTint="@color/CadetBlue"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="skip"
+                        android:textSize="7pt"
+                        android:gravity="center"
+                        android:onClick="skipOnce" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1.1"
+                        android:id="@+id/timer"
+                        android:text=""
+                        android:textSize="11pt"
+                        android:gravity="center"
+                        android:background="@color/Black" />
+
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"

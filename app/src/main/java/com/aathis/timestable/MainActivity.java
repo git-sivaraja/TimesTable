@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -26,11 +27,12 @@ public class MainActivity extends AppCompatActivity {
     public static final String PREV_REPORT = "com.aathis.timestable.previousReport";
     public static final String PLAYER_NAME = "com.aathis.timestable.playerName";
     public static final String PLAYER_GAME_HISTORY_LIST = "com.aathis.timestable.playerGameHistory";
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MMM-yy:HH:mm");
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MMM HH:mm");
     public static final TableRow.LayoutParams tableRowLayoutParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f);
 
     DBHelper dbHelper = null;
     EditText playerNameTxt, tableNumberTxt, uptoNumberTxt = null;
+    Button historyButton = null;
     TextView PreviousReportV = null;
     TableLayout table = null;
 
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (players.size() > 0) {
             showHeader(table);
+            playerNameTxt.setText(players.get(0).getName());
         }
 
         for (int i = 0; i < players.size(); i++) {
@@ -71,11 +74,11 @@ public class MainActivity extends AppCompatActivity {
             row.setLayoutParams(lp);
 
             Player player = players.get(i);
-            playerNameTxt.setText(player.getName());
 
             addTextView(row, DATE_FORMAT.format(player.getDatesPlayed()));
             addTextView(row, "" + player.getTable());
             addTextView(row, player.getTimeTakenInMillis() + " Secs");
+            addTextView(row, player.getCompletionScale() + "%");
 
             if (i % 2 != 0) {
                 row.setBackgroundColor(Color.DKGRAY);
@@ -87,8 +90,9 @@ public class MainActivity extends AppCompatActivity {
     private void showHeader(TableLayout table) {
         TableRow headerRow = new TableRow(this);
         addHeaderTextView(headerRow, "Date Played");
-        addHeaderTextView(headerRow, "Table Number");
+        addHeaderTextView(headerRow, "Table");
         addHeaderTextView(headerRow, "Time Taken");
+        addHeaderTextView(headerRow, "Score");
         headerRow.setBackgroundColor(Color.DKGRAY);
         table.addView(headerRow);
     }
@@ -100,6 +104,16 @@ public class MainActivity extends AppCompatActivity {
         textView.setTextColor(Color.GREEN);
         textView.setLayoutParams(tableRowLayoutParams);
         textView.setGravity(Gravity.CENTER);
+        if (text.contains("%")) {
+
+            if (text.contains("100%")) {
+                textView.setBackgroundColor(Color.GREEN);
+                textView.setTextColor(Color.BLACK);
+            } else {
+                textView.setBackgroundColor(Color.RED);
+                textView.setTextColor(Color.BLACK);
+            }
+        }
         row.addView(textView);
     }
 
@@ -137,9 +151,9 @@ public class MainActivity extends AppCompatActivity {
             PreviousReportV.setTextColor(Color.RED);
 
         }
-
-
     }
+
+
 
     public void startPlaying(View view) {
 
@@ -166,13 +180,13 @@ public class MainActivity extends AppCompatActivity {
         playerNameTxt = findViewById(R.id.playerName);
         tableNumberTxt = findViewById(R.id.tableNumber);
         uptoNumberTxt = findViewById(R.id.uptoNumber);
+        historyButton = findViewById(R.id.historytButton);
         table = findViewById(R.id.playHistory);
         PreviousReportV = findViewById(R.id.mainTxtMsg);
         playerNameTxt.addTextChangedListener(new EditPlayerNameListener());
 
         dbHelper = new DBHelper(this);
         playerNameTxt.requestFocus();
-
     }
 
     private class EditPlayerNameListener implements TextWatcher {
@@ -186,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
             if (PreviousReportV.getText().equals("Sorry! No play history available.\n")) {
                 PreviousReportV.setText("");
             }
+
         }
 
         @Override

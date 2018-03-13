@@ -66,12 +66,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_weight="1">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="50">
+                    android:layout_weight="1">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -130,6 +131,7 @@
                                 android:layout_height="match_parent"
                                 android:text=""
                                 /-->
+
                         </LinearLayout>
 
                         <TextView
@@ -143,10 +145,10 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="50">
+                    android:layout_weight="0">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:background="@color/Black">
@@ -209,33 +211,38 @@
                             android:text="" />
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight=".9"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:gravity="right"
                             android:orientation="horizontal">
 
                             <Button
                                 android:id="@+id/historytButton"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                style="@style/Widget.AppCompat.Button.Colored"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:onClick="showHistory"
+                                android:backgroundTint="@color/DimGray"
                                 android:layout_weight="1"
                                 android:text="history" />
 
                             <Button
                                 android:id="@+id/startButton"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                style="@style/Widget.AppCompat.Button.Colored"
+                                android:backgroundTint="@color/CadetBlue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:onClick="startPlaying"
                                 android:layout_weight="1"
                                 android:text="Start" />
                         </LinearLayout>
 
-                        <TextView
+                        <!--TextView
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight=".1"
-                            android:text="" />
+                            android:layout_weight=""
+                            android:text="" /-->
                         <!--Button
                             android:id="@+id/button"
                             android:layout_width="wrap_content"
