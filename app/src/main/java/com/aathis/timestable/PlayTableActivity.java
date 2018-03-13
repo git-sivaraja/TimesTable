@@ -46,7 +46,7 @@ public class PlayTableActivity extends AppCompatActivity {
     ArrayList<Map<Integer, String>> historyList = null;
     DBHelper dbHelper = null;
     ArrayList<Integer> randumNumbers = null;
-    GifDrawable gifDrawable = null;
+    GifDrawable gifDrawable, gifDrawable_NextTable = null;
 
 
     @Override
@@ -92,6 +92,7 @@ public class PlayTableActivity extends AppCompatActivity {
 
         try {
             gifDrawable = new GifDrawable(getResources(), R.drawable.images_wrong_1);
+            gifDrawable_NextTable = new GifDrawable(getResources(), R.drawable.tenor);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -136,7 +137,8 @@ public class PlayTableActivity extends AppCompatActivity {
                 processCorrectAnswer(ans);
             } else if (ansstr != null && ansstr.length() > 0 && isWrongDigit(ansstr, Integer.toString(correctAnswer))) {
                 processWrongAnswer();
-            } else if (resultGreetingTxt.getText().toString().contains("Welcome")) {
+            } else if (resultGreetingTxt.getText().toString().contains("Welcome") ||
+                    resultGreetingTxt.getText().toString().contains("Keep")) {
                 //do nothing..
             } else {
                 resultGreetingTxt.setText("");
@@ -157,7 +159,8 @@ public class PlayTableActivity extends AppCompatActivity {
             String displayString = "(" + randumNumber + " x " + tableNumber + " = " + ans + " )";
             progressBar.setProgress(progressCount += 1);
             if (progressBar.getProgress() == progressBar.getMax()) {
-                sendBackResult();
+                //sendBackResult();
+                goUpToNextLevel(null);
                 return;
             }
             nextNumber();
@@ -245,6 +248,8 @@ public class PlayTableActivity extends AppCompatActivity {
         makeUpTitle();
         nextNumber();
         startTime = System.currentTimeMillis();
+        greetingImageV.setImageDrawable(gifDrawable_NextTable);
+        resultGreetingTxt.setText("Well Done! " + playerName + " \n Keep up and \n Continue playing Next Table...");
     }
 
     public void goDownToNextLevel(View view) {
@@ -258,6 +263,8 @@ public class PlayTableActivity extends AppCompatActivity {
             makeUpTitle();
             nextNumber();
             startTime = System.currentTimeMillis();
+            greetingImageV.setImageResource(R.mipmap.book_read);
+            resultGreetingTxt.setText("Take it Easy " + playerName + "! \n Keep calm and \n Continue playing ...");
         }
     }
 
