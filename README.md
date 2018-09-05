@@ -2,7 +2,7 @@
 
 A simple TimesTable Game application for kids.
 
-This is a Android application developed using JAVA to encourage learning the times tables using an interactive game.
+This Android application was developed using JAVA to encourage learning the times tables in Maths, using an interactive game.
 
 This andriod app can be downloaded from Google's play store on any android mobiles.
 
